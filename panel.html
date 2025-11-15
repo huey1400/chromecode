@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Code</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div id="app">
+    <div id="header">
+      <div id="status" class="status-disconnected">Not connected</div>
+    </div>
+
+    <div id="settings-panel" class="hidden">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h3>Settings</h3>
+          <button id="close-settings" class="close-btn">×</button>
+        </div>
+        <label for="api-key">Anthropic API Key:</label>
+        <input type="password" id="api-key" placeholder="sk-ant-...">
+        <div class="settings-footer">
+          <button id="save-settings">Save</button>
+          <p class="help-text">Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-container">
+      <div id="messages"></div>
+    </div>
+
+    <div id="input-container">
+      <textarea
+        id="user-input"
+        placeholder="Ask me to read or modify the CodePen code..."
+        rows="3"
+      ></textarea>
+      <div id="input-actions">
+        <button id="settings-btn" title="Settings">⚙️</button>
+        <button id="send-btn">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="panel.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Extension Icons</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f0f0;
+    }
+    canvas {
+      border: 2px solid #ccc;
+      margin: 10px;
+      background: white;
+    }
+    .container {
+      text-align: center;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Extension Icon Generator</h1>
+    <p>Click the buttons below to download the icons</p>
+
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <canvas id="canvas128" width="128" height="128"></canvas>
+
+    <div>
+      <button onclick="downloadIcon(16)">Download 16x16</button>
+      <button onclick="downloadIcon(48)">Download 48x48</button>
+      <button onclick="downloadIcon(128)">Download 128x128</button>
+    </div>
+  </div>
+
+  <script>
+    function drawIcon(size) {
+      const canvas = document.getElementById(`canvas${size}`);
+      const ctx = canvas.getContext('2d');
+
+      // Clear canvas
+      ctx.clearRect(0, 0, size, size);
+
+      // Background circle with gradient
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#0e639c');
+      gradient.addColorStop(1, '#4ec9b0');
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size/2 - 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner circle
+      ctx.fillStyle = '#1e1e1e';
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size/2 - 4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Code brackets
+      const scale = size / 128;
+      ctx.strokeStyle = '#4ec9b0';
+      ctx.lineWidth = 3 * scale;
+      ctx.lineCap = 'round';
+
+      // Left bracket
+      ctx.beginPath();
+      ctx.moveTo(size * 0.27, size * 0.27);
+      ctx.lineTo(size * 0.2, size * 0.39);
+      ctx.lineTo(size * 0.2, size * 0.61);
+      ctx.lineTo(size * 0.27, size * 0.73);
+      ctx.stroke();
+
+      // Right bracket
+      ctx.beginPath();
+      ctx.moveTo(size * 0.73, size * 0.27);
+      ctx.lineTo(size * 0.8, size * 0.39);
+      ctx.lineTo(size * 0.8, size * 0.61);
+      ctx.lineTo(size * 0.73, size * 0.73);
+      ctx.stroke();
+
+      // Center AI spark
+      ctx.fillStyle = '#0e639c';
+      ctx.beginPath();
+      ctx.arc(size/2, size/2, size * 0.14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Spark star
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      const centerX = size/2;
+      const centerY = size/2;
+      const sparkSize = size * 0.1;
+
+      // Simple cross/star shape
+      ctx.moveTo(centerX - sparkSize, centerY);
+      ctx.lineTo(centerX + sparkSize, centerY);
+      ctx.moveTo(centerX, centerY - sparkSize);
+      ctx.lineTo(centerX, centerY + sparkSize);
+      ctx.lineWidth = 2 * scale;
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+    }
+
+    function downloadIcon(size) {
+      const canvas = document.getElementById(`canvas${size}`);
+      const link = document.createElement('a');
+      link.download = `icon${size}.png`;
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+
+    // Draw all icons on load
+    drawIcon(16);
+    drawIcon(48);
+    drawIcon(128);
+  </script>
+</body>
+</html>
