@@ -6,19 +6,11 @@ const connections = new Map();
 
 // Handle connections from DevTools panels
 chrome.runtime.onConnect.addListener((port) => {
-  console.log('DevTools panel connected');
-
-  // Store the connection
   const tabId = port.sender?.tab?.id || chrome.devtools?.inspectedWindow?.tabId;
 
   port.onMessage.addListener(async (message) => {
-    console.log('Message from panel:', message);
-
     if (message.type === 'INIT') {
-      // Store the port for this tab
-      console.log('✓ Storing connection for tab:', message.tabId);
       connections.set(message.tabId, port);
-      console.log('Active connections after INIT:', Array.from(connections.keys()));
       return;
     }
 
@@ -144,8 +136,6 @@ chrome.runtime.onConnect.addListener((port) => {
   });
 
   port.onDisconnect.addListener(() => {
-    console.log('DevTools panel disconnected');
-    // Clean up the connection
     for (const [tabId, p] of connections.entries()) {
       if (p === port) {
         connections.delete(tabId);
@@ -158,18 +148,11 @@ chrome.runtime.onConnect.addListener((port) => {
 // Handle messages from content scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'CONTENT_READY') {
-    console.log('✓ Content script ready on tab:', sender.tab?.id);
-    console.log('Active connections:', Array.from(connections.keys()));
-
-    // Notify the DevTools panel if it's connected
     const port = connections.get(sender.tab?.id);
     if (port) {
-      console.log('✓ Forwarding CONTENT_READY to DevTools panel');
       port.postMessage({
         type: 'CONTENT_READY'
       });
-    } else {
-      console.log('✗ No DevTools panel connected for this tab yet');
     }
   }
   return true;

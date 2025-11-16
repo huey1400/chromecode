@@ -1,8 +1,6 @@
 // Content script that runs on CodePen pages (in isolated world)
 // Communicates with inject.js (which runs in main world) via window.postMessage
 
-console.log('Chrome Code content script loaded');
-
 // Notify background script that content is ready
 chrome.runtime.sendMessage({ type: 'CONTENT_READY' });
 
@@ -62,8 +60,6 @@ async function setCode(editorType, code, changedLines) {
 
 // Listen for messages from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Content script received message:', message);
-
   if (message.type === 'GET_CODE') {
     getAllCode().then(code => {
       sendResponse({
@@ -92,12 +88,9 @@ let retryCount = 0;
 const maxRetries = 10;
 
 async function checkEditorsReadyLoop() {
-  console.log(`Checking for CodePen editors (attempt ${retryCount + 1}/${maxRetries})...`);
-
   const ready = await checkEditorsReady();
 
   if (ready) {
-    console.log('✓ CodePen editors detected and ready!');
     chrome.runtime.sendMessage({
       type: 'CONTENT_READY',
       editorsFound: {
@@ -107,15 +100,8 @@ async function checkEditorsReadyLoop() {
       }
     });
   } else if (retryCount < maxRetries) {
-    console.log(`No editors found yet, retrying in 1 second...`);
     retryCount++;
     setTimeout(checkEditorsReadyLoop, 1000);
-  } else {
-    console.log('✗ Failed to detect CodePen editors after all retries');
-    console.log('Debug info:', {
-      boxes: document.querySelectorAll('.box-html, .box-css, .box-js').length,
-      codeMirrorElements: document.querySelectorAll('.CodeMirror').length
-    });
   }
 }
 

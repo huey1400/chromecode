@@ -29,11 +29,9 @@ let agent = null;
 function initConnection() {
   // Don't create a new connection if we already have one
   if (isPortConnected && backgroundPort) {
-    console.log('Already connected to background script');
     return;
   }
 
-  console.log('Initializing connection to background script...');
   backgroundPort = chrome.runtime.connect({ name: 'devtools-panel' });
   isPortConnected = true;
 
@@ -44,13 +42,8 @@ function initConnection() {
     tabId: tabId
   });
 
-  console.log('Sent INIT message with tabId:', tabId);
-
   backgroundPort.onMessage.addListener((message) => {
-    console.log('Message from background:', message);
-
     if (message.type === 'CONTENT_READY') {
-      console.log('✓ Content script is ready!');
       // Clear chat on page reload
       messagesContainer.innerHTML = '';
       conversationHistory = [];
@@ -60,8 +53,6 @@ function initConnection() {
 
     if (message.type === 'CODE_DATA') {
       currentCode = message.data.code;
-      console.log('Code updated:', currentCode);
-      // If we successfully got code, we're connected
       updateStatus(true);
     }
 
@@ -71,22 +62,17 @@ function initConnection() {
   });
 
   backgroundPort.onDisconnect.addListener(() => {
-    console.log('Port disconnected');
     isPortConnected = false;
     if (agent) agent.setPortConnected(false);
     updateStatus(false);
-    // Try to reconnect after a short delay
     setTimeout(() => {
       if (!isPortConnected) {
-        console.log('Attempting to reconnect...');
         initConnection();
       }
     }, 1000);
   });
 
-  // Try to refresh code immediately in case content script is already loaded
   setTimeout(() => {
-    console.log('Attempting initial code refresh...');
     refreshCode();
   }, 1000);
 }

@@ -107,5 +107,3 @@ window.addEventListener('message', (event) => {
 
   window.postMessage(response, '*');
 });
-
-console.log('Chrome Code API injected into page context');
