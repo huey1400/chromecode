@@ -6,8 +6,6 @@ const connections = new Map();
 
 // Handle connections from DevTools panels
 chrome.runtime.onConnect.addListener((port) => {
-  const tabId = port.sender?.tab?.id || chrome.devtools?.inspectedWindow?.tabId;
-
   port.onMessage.addListener(async (message) => {
     if (message.type === 'INIT') {
       connections.set(message.tabId, port);

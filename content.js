@@ -46,10 +46,6 @@ async function checkEditorsReady() {
   return await sendToMainWorld('checkReady');
 }
 
-async function getCode(editorType) {
-  return await sendToMainWorld('getCode', { editorType });
-}
-
 async function getAllCode() {
   return await sendToMainWorld('getAllCode');
 }
@@ -91,14 +87,7 @@ async function checkEditorsReadyLoop() {
   const ready = await checkEditorsReady();
 
   if (ready) {
-    chrome.runtime.sendMessage({
-      type: 'CONTENT_READY',
-      editorsFound: {
-        html: true,
-        css: true,
-        js: true
-      }
-    });
+    chrome.runtime.sendMessage({ type: 'CONTENT_READY' });
   } else if (retryCount < maxRetries) {
     retryCount++;
     setTimeout(checkEditorsReadyLoop, 1000);
