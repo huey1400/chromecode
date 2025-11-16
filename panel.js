@@ -264,13 +264,13 @@ function formatMessageContent(content) {
     if (blockContent.includes('<<<SEARCH>>>') && blockContent.includes('<<<REPLACE>>>')) {
       // Format as SEARCH/REPLACE diff with colored view
       const diffHtml = formatDiffBlock(blockContent, escapeHtml);
-      result += `<details>
+      result += `<details open>
         <summary>${language.toUpperCase()} Changes</summary>
         <div class="diff-view">${diffHtml}</div>
       </details>`;
     } else {
       // Format as complete code
-      result += `<details>
+      result += `<details open>
         <summary>${language.toUpperCase()} Code</summary>
         <pre><code>${escapeHtml(blockContent)}</code></pre>
       </details>`;
