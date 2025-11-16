@@ -10,7 +10,8 @@
   "host_permissions": [
     "https://codepen.io/*",
     "https://*.codepen.io/*",
-    "https://api.anthropic.com/*"
+    "https://api.anthropic.com/*",
+    "https://generativelanguage.googleapis.com/*"
   ],
   "background": {
     "service_worker": "background.js"
