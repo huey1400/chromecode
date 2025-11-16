@@ -1,20 +1,22 @@
 # Chrome Code
 
-A Chrome extension that brings Claude AI directly into Chrome DevTools for CodePen. Chat with Claude to read and modify your CodePen code in real-time.
+A Chrome extension that brings AI coding assistance directly into Chrome DevTools for CodePen. Chat with an AI agent to read and modify your CodePen code in real-time.
 
 ## Features
 
 - Chat interface integrated into Chrome DevTools
 - Read all code from CodePen editors (HTML, CSS, JavaScript)
 - Modify code directly through natural language commands
-- Powered by Claude Sonnet 4.5 (model: claude-sonnet-4-5-20250929)
+- Multiple AI providers supported (currently Claude and Gemini)
 - Dark theme matching DevTools aesthetic
 - Real-time code synchronization
 
 ## Prerequisites
 
 - Chrome or Chromium-based browser
-- Anthropic API key ([Get one here](https://console.anthropic.com/))
+- API key for your chosen provider:
+  - Claude: [Get key from Anthropic](https://console.anthropic.com/)
+  - Gemini: [Get key from Google AI Studio](https://aistudio.google.com/apikey)
 - A CodePen account and pens to work with
 
 ## Installation
@@ -32,9 +34,10 @@ A Chrome extension that brings Claude AI directly into Chrome DevTools for CodeP
 1. Navigate to any CodePen page (e.g., https://codepen.io/pen/)
 2. Open Chrome DevTools (F12 or Cmd+Option+I on Mac)
 3. Click on the "AI Code" tab in DevTools
-4. Click the settings icon (⚙️)
-5. Enter your Anthropic API key
-6. Click "Save"
+4. Select your AI provider from the dropdown (Claude or Gemini)
+5. Click the settings icon (⚙️)
+6. Enter your API key for the selected provider
+7. Click "Save"
 
 ## Usage
 
@@ -43,11 +46,12 @@ A Chrome extension that brings Claude AI directly into Chrome DevTools for CodeP
 1. Open a CodePen page with some code
 2. Open Chrome DevTools and switch to the "AI Code" tab
 3. The status should show "Connected to CodePen"
-4. Start chatting with Claude about your code!
+4. Select your preferred AI provider (Claude or Gemini)
+5. Start chatting with the agent about your code!
 
 ### Code Update Syntax
 
-When Claude wants to update code, it uses special markers with SEARCH/REPLACE blocks:
+When the agent wants to update code, it uses special markers with SEARCH/REPLACE blocks:
 
 ```
 [UPDATE_HTML]
@@ -119,25 +123,30 @@ The extension will automatically detect these markers, find the SEARCH text in t
    - Chat interface
    - API key management
    - Conversation history
-   - Claude API integration
+   - AI provider selection and integration
 
-2. **Background Service Worker** ([background.js](background.js))
+2. **AI Agents** ([js/ClaudeAgent.js](js/ClaudeAgent.js), [js/GeminiAgent.js](js/GeminiAgent.js))
+   - Abstracted agent interface
+   - Provider-specific API communication
+   - Swappable implementations
+
+3. **Background Service Worker** ([background.js](background.js))
    - Message routing between DevTools and content script
    - Connection management
-   - Calls Claude API (to avoid CORS issues)
+   - Calls AI APIs (to avoid CORS issues)
 
-3. **Content Script** ([content.js](content.js))
+4. **Content Script** ([content.js](content.js))
    - Runs on CodePen pages in isolated world
    - Bridges communication between panel and inject script
    - Uses window.postMessage to communicate with main world
 
-4. **Inject Script** ([inject.js](inject.js))
+5. **Inject Script** ([inject.js](inject.js))
    - Runs in main world (same context as CodePen)
    - Accesses CodeMirror editor instances directly
    - Reads and modifies code in the editors
    - Highlights changed lines with animations
 
-5. **DevTools Entry** ([devtools.html](devtools.html), [devtools.js](devtools.js))
+6. **DevTools Entry** ([devtools.html](devtools.html), [devtools.js](devtools.js))
    - Creates the DevTools panel
 
 ### CodePen Integration
@@ -161,10 +170,13 @@ chromecode/
 ├── devtools.js            # DevTools panel creator
 ├── panel.html             # Chat UI
 ├── panel.css              # Chat UI styles
-├── panel.js               # Chat logic & Claude API
+├── panel.js               # Chat logic & agent integration
 ├── background.js          # Background service worker
 ├── content.js             # Content script (isolated world)
 ├── inject.js              # Inject script (main world)
+├── js/                    # AI agent implementations
+│   ├── ClaudeAgent.js     # Claude API integration
+│   └── GeminiAgent.js     # Gemini API integration
 ├── icons/                 # Extension icons
 │   ├── icon.svg
 │   ├── icon16.png
@@ -216,29 +228,31 @@ chromecode/
 
 ## API Costs
 
-This extension uses the Claude Sonnet 4.5 model (claude-sonnet-4-5-20250929). Costs are based on:
-- Input tokens: Code context + conversation history
-- Output tokens: Claude's responses
+API costs depend on your chosen provider:
+
+**Claude** (Sonnet 4.5):
+- See [Anthropic's pricing](https://www.anthropic.com/pricing)
+
+**Gemini** (2.5 Flash):
+- See [Google AI pricing](https://ai.google.dev/pricing)
 
 Each message sends the current code state plus conversation history. To minimize costs:
 - Keep conversations focused
 - Start a new conversation for different tasks
 - Avoid very long code examples
 
-See [Anthropic's pricing](https://www.anthropic.com/pricing) for current rates.
-
 ## Privacy & Security
 
-- Your API key is stored locally in Chrome's storage
-- Code is sent to Anthropic's API for processing
+- Your API keys are stored locally in Chrome's storage (separate for each provider)
+- Code is sent to your chosen provider's API for processing
 - No code or conversations are stored by this extension
-- All communication happens directly between your browser and Anthropic's API
+- All communication happens directly between your browser and the provider's API
 
 ## Limitations
 
 - Only works on CodePen pages
 - Requires active internet connection
-- Requires valid Anthropic API key
+- Requires valid API key for chosen provider
 - Code changes are applied to all three editors independently
 - Cannot handle multiple CodePen tabs simultaneously (uses inspected window)
 
@@ -246,11 +260,12 @@ See [Anthropic's pricing](https://www.anthropic.com/pricing) for current rates.
 
 Potential features for future versions:
 - Support for other code editors (JSFiddle, CodeSandbox, etc.)
+- Additional AI providers (OpenAI, etc.)
 - Conversation export/import
 - Code history and undo
 - Syntax highlighting in chat
 - Partial code updates (instead of full replacement)
-- Model selection (Opus, Haiku, etc.)
+- Model selection within providers
 - Streaming responses
 
 ## Contributing
@@ -263,7 +278,7 @@ MIT License - Feel free to use and modify as needed.
 
 ## Credits
 
-- Built with [Claude Sonnet 4.5](https://www.anthropic.com/claude)
+- AI providers: [Claude](https://www.anthropic.com/claude) and [Gemini](https://ai.google.dev/)
 - Designed for [CodePen](https://codepen.io/)
 - Inspired by [Claude Code](https://docs.claude.com/claude-code)
 

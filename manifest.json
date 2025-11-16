@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "AI Code",
   "version": "1.0.0",
-  "description": "AI coding assistant in Chrome DevTools for CodePen - powered by Claude",
+  "description": "AI coding assistant in Chrome DevTools for CodePen",
   "permissions": [
     "activeTab",
     "storage"
