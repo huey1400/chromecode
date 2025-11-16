@@ -45,25 +45,6 @@ A Chrome extension that brings Claude AI directly into Chrome DevTools for CodeP
 3. The status should show "Connected to CodePen"
 4. Start chatting with Claude about your code!
 
-### Example Commands
-
-**Reading Code:**
-- "What does this code do?"
-- "Explain the JavaScript code"
-- "What's in the CSS?"
-
-**Modifying Code:**
-- "Change the background color to blue"
-- "Add a hover effect to the buttons"
-- "Create a flexbox layout"
-- "Add comments to the JavaScript code"
-- "Refactor this code to be more efficient"
-
-**Getting Help:**
-- "How can I make this responsive?"
-- "What's wrong with my layout?"
-- "Suggest improvements for this code"
-
 ### Code Update Syntax
 
 When Claude wants to update code, it uses special markers with SEARCH/REPLACE blocks:
