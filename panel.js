@@ -212,9 +212,10 @@ function formatMessageContent(content) {
   let match;
 
   while ((match = codeBlockPattern.exec(content)) !== null) {
-    // Add text before the code block
+    // Add text before the code block (render as markdown)
     if (match.index > lastIndex) {
-      result += escapeHtml(content.substring(lastIndex, match.index));
+      const textBefore = content.substring(lastIndex, match.index);
+      result += marked.parse(textBefore);
     }
 
     const language = match[1].toLowerCase();
@@ -238,9 +239,10 @@ function formatMessageContent(content) {
     lastIndex = match.index + match[0].length;
   }
 
-  // Add remaining text after last code block
+  // Add remaining text after last code block (render as markdown)
   if (lastIndex < content.length) {
-    result += escapeHtml(content.substring(lastIndex));
+    const textAfter = content.substring(lastIndex);
+    result += marked.parse(textAfter);
   }
 
   return result;
