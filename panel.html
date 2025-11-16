@@ -10,19 +10,23 @@
   <div id="app">
     <div id="header">
       <div id="status" class="status-disconnected">Not connected</div>
+      <select id="ai-provider">
+        <option value="claude">Claude</option>
+        <option value="gemini">Gemini</option>
+      </select>
     </div>
 
     <div id="settings-panel" class="hidden">
       <div class="settings-content">
         <div class="settings-header">
-          <h3>Settings</h3>
+          <h3 id="settings-title">Claude Settings</h3>
           <button id="close-settings" class="close-btn">×</button>
         </div>
-        <label for="api-key">Anthropic API Key:</label>
-        <input type="password" id="api-key" placeholder="sk-ant-...">
+        <label for="api-key">API Key:</label>
+        <input type="password" id="api-key" placeholder="Enter API key...">
         <div class="settings-footer">
           <button id="save-settings">Save</button>
-          <p class="help-text">Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></p>
+          <p class="help-text" id="api-key-help">Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a></p>
         </div>
       </div>
     </div>
@@ -45,6 +49,7 @@
   </div>
 
   <script src="js/ClaudeAgent.js"></script>
+  <script src="js/GeminiAgent.js"></script>
   <script src="panel.js"></script>
 </body>
 </html>

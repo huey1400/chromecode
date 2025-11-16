@@ -97,6 +97,50 @@ chrome.runtime.onConnect.addListener((port) => {
         });
       }
     }
+
+    if (message.type === 'CALL_GEMINI') {
+      // Call Gemini API from background (no CORS restrictions)
+      try {
+        // Convert messages to Gemini format
+        const geminiMessages = message.messages.map(msg => ({
+          role: msg.role === 'assistant' ? 'model' : 'user',
+          parts: [{ text: msg.content }]
+        }));
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${message.apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: message.systemPrompt }]
+            },
+            contents: geminiMessages,
+            generationConfig: {
+              maxOutputTokens: 8192
+            }
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error?.message || 'API request failed');
+        }
+
+        const data = await response.json();
+        const text = data.candidates[0].content.parts[0].text;
+        port.postMessage({
+          type: 'GEMINI_RESPONSE',
+          response: text
+        });
+      } catch (error) {
+        port.postMessage({
+          type: 'ERROR',
+          error: error.message
+        });
+      }
+    }
   });
 
   port.onDisconnect.addListener(() => {

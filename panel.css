@@ -49,6 +49,21 @@ body {
   color: #f48771;
 }
 
+#ai-provider {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border: 1px solid #3e3e42;
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+#ai-provider:focus {
+  outline: none;
+  border-color: #0e639c;
+}
+
 #settings-panel {
   position: absolute;
   top: 50px;
