@@ -195,6 +195,45 @@ function scrollToBottom() {
   }, 0);
 }
 
+// Format SEARCH/REPLACE block as colored diff
+function formatDiffBlock(blockContent, escapeHtml) {
+  const sections = blockContent.split('<<<SEARCH>>>').filter(s => s.trim());
+  let html = '';
+
+  for (const section of sections) {
+    if (!section.includes('<<<REPLACE>>>')) continue;
+
+    const [searchPart, replacePart] = section.split('<<<REPLACE>>>');
+    const searchText = searchPart.trim();
+    const replaceText = replacePart.split('<<<')[0].trim();
+
+    // Compute character-level diff
+    const diff = Diff.diffChars(searchText, replaceText);
+
+    let removeHtml = '';
+    let addHtml = '';
+
+    for (const part of diff) {
+      const escaped = escapeHtml(part.value);
+      if (part.removed) {
+        removeHtml += '<span class="diff-highlight">' + escaped + '</span>';
+      } else if (part.added) {
+        addHtml += '<span class="diff-highlight">' + escaped + '</span>';
+      } else {
+        removeHtml += escaped;
+        addHtml += escaped;
+      }
+    }
+
+    html += '<div class="diff-block">';
+    html += '<div class="diff-remove"><div class="diff-label">−</div><pre>' + removeHtml + '</pre></div>';
+    html += '<div class="diff-add"><div class="diff-label">+</div><pre>' + addHtml + '</pre></div>';
+    html += '</div>';
+  }
+
+  return html;
+}
+
 // Format message content with collapsible code blocks
 function formatMessageContent(content) {
   // Escape HTML to prevent XSS
@@ -223,10 +262,11 @@ function formatMessageContent(content) {
 
     // Check if this is a SEARCH/REPLACE block or complete code
     if (blockContent.includes('<<<SEARCH>>>') && blockContent.includes('<<<REPLACE>>>')) {
-      // Format as SEARCH/REPLACE diff
+      // Format as SEARCH/REPLACE diff with colored view
+      const diffHtml = formatDiffBlock(blockContent, escapeHtml);
       result += `<details>
         <summary>${language.toUpperCase()} Changes</summary>
-        <pre><code>${escapeHtml(blockContent)}</code></pre>
+        <div class="diff-view">${diffHtml}</div>
       </details>`;
     } else {
       // Format as complete code
