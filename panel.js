@@ -18,6 +18,7 @@ let backgroundPort = null;
 let tabId = chrome.devtools.inspectedWindow.tabId;
 let currentCode = { html: '', css: '', js: '' };
 let isPortConnected = false;
+let agent = null;
 
 // Initialize connection to background script
 function initConnection() {
@@ -30,6 +31,8 @@ function initConnection() {
   console.log('Initializing connection to background script...');
   backgroundPort = chrome.runtime.connect({ name: 'devtools-panel' });
   isPortConnected = true;
+
+  if (agent) agent.setBackgroundPort(backgroundPort);
 
   backgroundPort.postMessage({
     type: 'INIT',
@@ -65,6 +68,7 @@ function initConnection() {
   backgroundPort.onDisconnect.addListener(() => {
     console.log('Port disconnected');
     isPortConnected = false;
+    if (agent) agent.setPortConnected(false);
     updateStatus(false);
     // Try to reconnect after a short delay
     setTimeout(() => {
@@ -88,6 +92,8 @@ async function loadSettings() {
   if (result.apiKey) {
     apiKey = result.apiKey;
     apiKeyInput.value = apiKey;
+    agent = new ClaudeAgent(apiKey);
+    if (backgroundPort) agent.setBackgroundPort(backgroundPort);
   }
 }
 
@@ -96,6 +102,8 @@ async function saveSettings() {
   apiKey = apiKeyInput.value.trim();
   if (apiKey) {
     await chrome.storage.local.set({ apiKey: apiKey });
+    agent = new ClaudeAgent(apiKey);
+    if (backgroundPort) agent.setBackgroundPort(backgroundPort);
     addSystemMessage('API key saved successfully');
     settingsPanel.classList.add('hidden');
   } else {
@@ -244,7 +252,7 @@ async function sendMessage() {
   const message = userInput.value.trim();
   if (!message) return;
 
-  if (!apiKey) {
+  if (!agent) {
     addSystemMessage('Please set your Anthropic API key in settings');
     settingsPanel.classList.remove('hidden');
     return;
@@ -292,7 +300,7 @@ async function sendMessage() {
 
   try {
     // Call Claude API
-    const response = await callClaudeAPI(systemPrompt, conversationHistory);
+    const response = await agent.sendMessage(systemPrompt, conversationHistory);
 
     // Remove thinking indicator
     thinkingMessage.remove();
@@ -391,63 +399,6 @@ Important:
 - Keep SEARCH blocks small and focused - just the lines you need to change
 
 Be concise and helpful. Focus on the specific changes requested.`;
-}
-
-// Call Claude API via background worker (to avoid CORS)
-async function callClaudeAPI(systemPrompt, messages) {
-  if (!backgroundPort || !isPortConnected) {
-    throw new Error('Not connected to background script');
-  }
-
-  return new Promise((resolve, reject) => {
-    // Set up one-time listener for the response
-    const responseHandler = (message) => {
-      if (message.type === 'CLAUDE_RESPONSE') {
-        backgroundPort.onMessage.removeListener(responseHandler);
-        backgroundPort.onMessage.removeListener(errorHandler);
-        resolve(message.response);
-      }
-    };
-
-    const errorHandler = (message) => {
-      if (message.type === 'ERROR') {
-        backgroundPort.onMessage.removeListener(responseHandler);
-        backgroundPort.onMessage.removeListener(errorHandler);
-        reject(new Error(message.error));
-      }
-    };
-
-    backgroundPort.onMessage.addListener(responseHandler);
-    backgroundPort.onMessage.addListener(errorHandler);
-
-    // Send request to background worker
-    try {
-      backgroundPort.postMessage({
-        type: 'CALL_CLAUDE',
-        tabId: tabId,
-        apiKey: apiKey,
-        systemPrompt: systemPrompt,
-        messages: messages
-      });
-    } catch (error) {
-      backgroundPort.onMessage.removeListener(responseHandler);
-      backgroundPort.onMessage.removeListener(errorHandler);
-      isPortConnected = false;
-      if (error.message.includes('disconnected port')) {
-        initConnection();
-        reject(new Error('Connection lost. Please try again.'));
-      } else {
-        reject(new Error('Failed to send message: ' + error.message));
-      }
-    }
-
-    // Timeout after 30 seconds
-    setTimeout(() => {
-      backgroundPort.onMessage.removeListener(responseHandler);
-      backgroundPort.onMessage.removeListener(errorHandler);
-      reject(new Error('Request timeout'));
-    }, 30000);
-  });
 }
 
 // Process assistant response and update CodePen if needed
