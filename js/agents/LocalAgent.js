@@ -1,4 +1,4 @@
-class BrowserAgent {
+class LocalAgent {
 
 	constructor( apiKey ) {
 

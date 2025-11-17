@@ -97,7 +97,7 @@ async function loadSettings() {
 // Create agent based on selected provider
 function createAgent() {
   if (aiProvider === 'browser') {
-    agent = new BrowserAgent();
+    agent = new LocalAgent();
   } else if (aiProvider === 'gemini') {
     agent = new GeminiAgent(geminiApiKey);
   } else {
