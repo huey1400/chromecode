@@ -132,6 +132,22 @@ chrome.runtime.onConnect.addListener((port) => {
       }
     }
 
+    if (message.type === 'CHECK_LOCAL_AI') {
+      // Check if Prompt API is available
+      try {
+        const available = typeof LanguageModel !== 'undefined';
+        port.postMessage({
+          type: 'LOCAL_AI_STATUS',
+          available
+        });
+      } catch (error) {
+        port.postMessage({
+          type: 'LOCAL_AI_STATUS',
+          available: false
+        });
+      }
+    }
+
     if (message.type === 'CALL_BROWSER') {
       // Call Prompt API from background
       try {

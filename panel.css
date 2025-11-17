@@ -154,6 +154,7 @@ body {
   color: #858585;
   margin: 0;
   text-align: right;
+  flex: 1;
 }
 
 .help-text a {

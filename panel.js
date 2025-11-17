@@ -56,6 +56,14 @@ function initConnection() {
       updateStatus(true);
     }
 
+    if (message.type === 'LOCAL_AI_STATUS') {
+      if (message.available) {
+        apiKeyHelp.innerHTML = 'Uses built-in Chrome AI.';
+      } else {
+        apiKeyHelp.innerHTML = 'Uses built-in Chrome AI.<br><br>Enable these flags:<br><code>chrome://flags/#prompt-api-for-gemini-nano</code><br><code>chrome://flags/#optimization-guide-on-device-model</code>';
+      }
+    }
+
     if (message.type === 'ERROR') {
       addSystemMessage('Error: ' + message.error);
     }
@@ -108,21 +116,35 @@ function createAgent() {
 
 // Update API key help text based on provider
 function updateApiKeyHelp() {
+  const saveButton = document.getElementById('save-settings');
+
   if (aiProvider === 'browser') {
     settingsTitle.textContent = 'Local Settings';
-    apiKeyHelp.innerHTML = 'Uses built-in Chrome AI. Enable at <a href="chrome://flags/#prompt-api-for-gemini-nano" target="_blank">chrome://flags</a>';
     apiKeyInput.style.display = 'none';
     document.querySelector('#settings-panel label').style.display = 'none';
+    saveButton.style.display = 'none';
+
+    // Set default text immediately
+    apiKeyHelp.innerHTML = 'Uses built-in Chrome AI.';
+
+    // Check if local AI is available
+    if (backgroundPort && isPortConnected) {
+      backgroundPort.postMessage({ type: 'CHECK_LOCAL_AI' });
+    } else {
+      apiKeyHelp.innerHTML = 'Uses built-in Chrome AI.<br><br>Enable these flags:<br><code>chrome://flags/#prompt-api-for-gemini-nano</code><br><code>chrome://flags/#optimization-guide-on-device-model</code>';
+    }
   } else if (aiProvider === 'gemini') {
     apiKeyInput.style.display = '';
     document.querySelector('#settings-panel label').style.display = '';
+    saveButton.style.display = '';
     settingsTitle.textContent = 'Gemini Settings';
-    apiKeyHelp.innerHTML = 'Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a>';
+    apiKeyHelp.innerHTML = 'Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>';
   } else {
     apiKeyInput.style.display = '';
     document.querySelector('#settings-panel label').style.display = '';
+    saveButton.style.display = '';
     settingsTitle.textContent = 'Claude Settings';
-    apiKeyHelp.innerHTML = 'Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a>';
+    apiKeyHelp.innerHTML = 'Get your API key from the <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>';
   }
 }
 
