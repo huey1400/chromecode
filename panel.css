@@ -21,7 +21,6 @@ body {
 #header {
   background: #252526;
   padding: 12px 16px;
-  border-bottom: 1px solid #3e3e42;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,7 +51,7 @@ body {
 #ai-provider {
   background: #1e1e1e;
   color: #d4d4d4;
-  border: 1px solid #3e3e42;
+  border: none;
   border-radius: 3px;
   padding: 4px 8px;
   font-size: 11px;
@@ -61,7 +60,6 @@ body {
 
 #ai-provider:focus {
   outline: none;
-  border-color: #0e639c;
 }
 
 #settings-panel {
@@ -69,7 +67,6 @@ body {
   top: 50px;
   right: 16px;
   background: #2d2d30;
-  border: 1px solid #3e3e42;
   border-radius: 6px;
   padding: 16px;
   z-index: 1000;
@@ -124,7 +121,7 @@ body {
   width: 100%;
   padding: 8px;
   background: #1e1e1e;
-  border: 1px solid #3e3e42;
+  border: none;
   border-radius: 3px;
   color: #d4d4d4;
   font-size: 12px;
@@ -254,7 +251,6 @@ body {
 }
 
 .message-content blockquote {
-  border-left: 3px solid #3e3e42;
   padding-left: 12px;
   margin: 8px 0;
   opacity: 0.8;
@@ -283,7 +279,6 @@ body {
 
 .message-content details {
   margin: 4px 0;
-  border: 1px solid #3e3e42;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -304,7 +299,6 @@ body {
 }
 
 .message-content details[open] summary {
-  border-bottom: 1px solid #3e3e42;
 }
 
 .message-content details pre {
@@ -319,10 +313,12 @@ body {
 .diff-view {
   max-height: 400px;
   overflow: auto;
+  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+  font-size: 12px;
 }
 
 .diff-block {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .diff-block:last-child {
@@ -331,54 +327,45 @@ body {
 
 .diff-remove,
 .diff-add {
-  display: flex;
-  font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
-  font-size: 12px;
+  padding: 8px 8px 8px 24px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border-left: 3px solid;
+  position: relative;
 }
 
 .diff-remove {
   background: rgba(248, 81, 73, 0.15);
-  border-left: 3px solid #f85149;
+  border-color: #f85149;
 }
 
 .diff-add {
   background: rgba(63, 185, 80, 0.15);
-  border-left: 3px solid #3fb950;
+  border-color: #3fb950;
 }
 
-.diff-label {
-  padding: 8px;
-  color: #858585;
-  font-weight: bold;
-  user-select: none;
-  min-width: 20px;
-  text-align: center;
-}
-
-.diff-remove .diff-label {
+.diff-remove::before {
+  content: '−';
   color: #f85149;
+  font-weight: bold;
+  position: absolute;
+  left: 8px;
 }
 
-.diff-add .diff-label {
+.diff-add::before {
+  content: '+';
   color: #3fb950;
+  font-weight: bold;
+  position: absolute;
+  left: 8px;
 }
 
-.diff-remove pre,
-.diff-add pre {
-  margin: 0;
-  padding: 8px;
-  background: none;
-  flex: 1;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-}
-
-.diff-remove .diff-highlight {
+.diff-highlight-remove {
   background: rgba(248, 81, 73, 0.4);
   border-radius: 2px;
 }
 
-.diff-add .diff-highlight {
+.diff-highlight-add {
   background: rgba(63, 185, 80, 0.4);
   border-radius: 2px;
 }
@@ -415,7 +402,6 @@ body {
 }
 
 #input-container {
-  border-top: 1px solid #3e3e42;
   padding: 12px 16px;
   background: #252526;
 }
@@ -424,7 +410,7 @@ body {
   width: 100%;
   padding: 10px;
   background: #1e1e1e;
-  border: 1px solid #3e3e42;
+  border: none;
   border-radius: 4px;
   color: #d4d4d4;
   font-size: 13px;
@@ -435,7 +421,6 @@ body {
 
 #user-input:focus {
   outline: none;
-  border-color: #0e639c;
 }
 
 #input-actions {
@@ -447,7 +432,7 @@ body {
 
 #settings-btn {
   background: transparent;
-  border: 1px solid #3e3e42;
+  border: none;
   color: #cccccc;
   padding: 6px 12px;
   border-radius: 4px;

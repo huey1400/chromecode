@@ -227,9 +227,9 @@ function formatDiffBlock(blockContent, escapeHtml) {
     for (const part of diff) {
       const escaped = escapeHtml(part.value);
       if (part.removed) {
-        removeHtml += '<span class="diff-highlight">' + escaped + '</span>';
+        removeHtml += '<span class="diff-highlight-remove">' + escaped + '</span>';
       } else if (part.added) {
-        addHtml += '<span class="diff-highlight">' + escaped + '</span>';
+        addHtml += '<span class="diff-highlight-add">' + escaped + '</span>';
       } else {
         removeHtml += escaped;
         addHtml += escaped;
@@ -237,8 +237,8 @@ function formatDiffBlock(blockContent, escapeHtml) {
     }
 
     html += '<div class="diff-block">';
-    html += '<div class="diff-remove"><div class="diff-label">−</div><pre>' + removeHtml + '</pre></div>';
-    html += '<div class="diff-add"><div class="diff-label">+</div><pre>' + addHtml + '</pre></div>';
+    html += '<div class="diff-remove">' + removeHtml + '</div>';
+    html += '<div class="diff-add">' + addHtml + '</div>';
     html += '</div>';
   }
 
