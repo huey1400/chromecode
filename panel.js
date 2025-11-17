@@ -109,12 +109,18 @@ function createAgent() {
 // Update API key help text based on provider
 function updateApiKeyHelp() {
   if (aiProvider === 'browser') {
-    settingsTitle.textContent = 'Browser Settings';
+    settingsTitle.textContent = 'Local Settings';
     apiKeyHelp.innerHTML = 'Uses built-in Chrome AI. Enable at <a href="chrome://flags/#prompt-api-for-gemini-nano" target="_blank">chrome://flags</a>';
+    apiKeyInput.style.display = 'none';
+    document.querySelector('#settings-panel label').style.display = 'none';
   } else if (aiProvider === 'gemini') {
+    apiKeyInput.style.display = '';
+    document.querySelector('#settings-panel label').style.display = '';
     settingsTitle.textContent = 'Gemini Settings';
     apiKeyHelp.innerHTML = 'Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com</a>';
   } else {
+    apiKeyInput.style.display = '';
+    document.querySelector('#settings-panel label').style.display = '';
     settingsTitle.textContent = 'Claude Settings';
     apiKeyHelp.innerHTML = 'Get your API key from <a href="https://console.anthropic.com/" target="_blank">console.anthropic.com</a>';
   }
@@ -124,7 +130,7 @@ function updateApiKeyHelp() {
 async function saveSettings() {
   if (aiProvider === 'browser') {
     createAgent();
-    addSystemMessage('Settings saved (Browser)');
+    addSystemMessage('Settings saved (Local)');
     settingsPanel.classList.add('hidden');
     return;
   }
@@ -633,7 +639,7 @@ aiProviderSelect.addEventListener('change', async () => {
     }
   }
 
-  const providerName = aiProvider === 'gemini' ? 'Gemini' : aiProvider === 'browser' ? 'Browser' : 'Claude';
+  const providerName = aiProvider === 'gemini' ? 'Gemini' : aiProvider === 'browser' ? 'Local' : 'Claude';
   addSystemMessage(`Switched to ${providerName}`);
 });
 
