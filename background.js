@@ -148,7 +148,7 @@ chrome.runtime.onConnect.addListener((port) => {
       }
     }
 
-    if (message.type === 'CALL_BROWSER') {
+    if (message.type === 'CALL_LOCAL') {
       // Call Prompt API from background
       try {
         if ( typeof LanguageModel === 'undefined' ) {
@@ -193,7 +193,7 @@ chrome.runtime.onConnect.addListener((port) => {
         session.destroy();
 
         port.postMessage({
-          type: 'BROWSER_RESPONSE',
+          type: 'LOCAL_RESPONSE',
           response
         });
 

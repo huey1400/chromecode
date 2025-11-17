@@ -1,5 +1,5 @@
 // DevTools panel script
-// Handles UI interactions and communication with Claude API
+// Handles UI interactions and communication with AI providers (Claude, Gemini, Local)
 
 const messagesContainer = document.getElementById('messages');
 const chatContainer = document.getElementById('chat-container');
@@ -14,6 +14,7 @@ const statusElement = document.getElementById('status');
 const aiProviderSelect = document.getElementById('ai-provider');
 const apiKeyHelp = document.getElementById('api-key-help');
 const settingsTitle = document.getElementById('settings-title');
+const apiKeyLabel = document.querySelector('#settings-panel label');
 
 let claudeApiKey = '';
 let geminiApiKey = '';
@@ -24,6 +25,19 @@ let tabId = chrome.devtools.inspectedWindow.tabId;
 let currentCode = { html: '', css: '', js: '' };
 let isPortConnected = false;
 let agent = null;
+
+// Provider configuration
+const PROVIDER_NAMES = {
+  'claude': 'Claude',
+  'gemini': 'Gemini',
+  'local': 'Local'
+};
+
+// Helper to get current API key
+const getApiKey = () => {
+  const apiKeys = { 'gemini': geminiApiKey, 'claude': claudeApiKey };
+  return apiKeys[aiProvider];
+};
 
 // Initialize connection to background script
 function initConnection() {
@@ -95,7 +109,7 @@ async function loadSettings() {
     aiProviderSelect.value = aiProvider;
   }
   updateApiKeyHelp();
-  const currentKey = aiProvider === 'gemini' ? geminiApiKey : claudeApiKey;
+  const currentKey = getApiKey();
   if (currentKey) {
     apiKeyInput.value = currentKey;
     createAgent();
@@ -104,7 +118,7 @@ async function loadSettings() {
 
 // Create agent based on selected provider
 function createAgent() {
-  if (aiProvider === 'browser') {
+  if (aiProvider === 'local') {
     agent = new LocalAgent();
   } else if (aiProvider === 'gemini') {
     agent = new GeminiAgent(geminiApiKey);
@@ -116,13 +130,11 @@ function createAgent() {
 
 // Update API key help text based on provider
 function updateApiKeyHelp() {
-  const saveButton = document.getElementById('save-settings');
-
-  if (aiProvider === 'browser') {
+  if (aiProvider === 'local') {
     settingsTitle.textContent = 'Local Settings';
     apiKeyInput.style.display = 'none';
-    document.querySelector('#settings-panel label').style.display = 'none';
-    saveButton.style.display = 'none';
+    apiKeyLabel.style.display = 'none';
+    saveSettingsBtn.style.display = 'none';
 
     // Set default text immediately
     apiKeyHelp.innerHTML = 'Uses built-in Chrome AI.';
@@ -135,14 +147,14 @@ function updateApiKeyHelp() {
     }
   } else if (aiProvider === 'gemini') {
     apiKeyInput.style.display = '';
-    document.querySelector('#settings-panel label').style.display = '';
-    saveButton.style.display = '';
+    apiKeyLabel.style.display = '';
+    saveSettingsBtn.style.display = '';
     settingsTitle.textContent = 'Gemini Settings';
     apiKeyHelp.innerHTML = 'Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>';
   } else {
     apiKeyInput.style.display = '';
-    document.querySelector('#settings-panel label').style.display = '';
-    saveButton.style.display = '';
+    apiKeyLabel.style.display = '';
+    saveSettingsBtn.style.display = '';
     settingsTitle.textContent = 'Claude Settings';
     apiKeyHelp.innerHTML = 'Get your API key from the <a href="https://console.anthropic.com/" target="_blank">Anthropic Console</a>';
   }
@@ -150,7 +162,7 @@ function updateApiKeyHelp() {
 
 // Save API key
 async function saveSettings() {
-  if (aiProvider === 'browser') {
+  if (aiProvider === 'local') {
     createAgent();
     addSystemMessage('Settings saved (Local)');
     settingsPanel.classList.add('hidden');
@@ -167,7 +179,7 @@ async function saveSettings() {
       await chrome.storage.local.set({ claudeApiKey: claudeApiKey });
     }
     createAgent();
-    addSystemMessage(`Settings saved (${aiProvider === 'gemini' ? 'Gemini' : 'Claude'})`);
+    addSystemMessage(`Settings saved (${PROVIDER_NAMES[aiProvider]})`);
     settingsPanel.classList.add('hidden');
   } else {
     addSystemMessage('Please enter a valid API key');
@@ -648,11 +660,11 @@ aiProviderSelect.addEventListener('change', async () => {
   await chrome.storage.local.set({ aiProvider: aiProvider });
   updateApiKeyHelp();
 
-  if (aiProvider === 'browser') {
+  if (aiProvider === 'local') {
     apiKeyInput.value = '';
     createAgent();
   } else {
-    const currentKey = aiProvider === 'gemini' ? geminiApiKey : claudeApiKey;
+    const currentKey = getApiKey();
     apiKeyInput.value = currentKey;
     if (currentKey) {
       createAgent();
@@ -661,8 +673,7 @@ aiProviderSelect.addEventListener('change', async () => {
     }
   }
 
-  const providerName = aiProvider === 'gemini' ? 'Gemini' : aiProvider === 'browser' ? 'Local' : 'Claude';
-  addSystemMessage(`Switched to ${providerName}`);
+  addSystemMessage(`Switched to ${PROVIDER_NAMES[aiProvider]}`);
 });
 
 // Initialize
