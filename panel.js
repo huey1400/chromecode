@@ -113,6 +113,9 @@ async function loadSettings() {
   if (currentKey) {
     apiKeyInput.value = currentKey;
     createAgent();
+  } else if (aiProvider === 'local') {
+    // Local provider doesn't need API key
+    createAgent();
   }
 }
 
@@ -364,13 +367,17 @@ function addThinkingMessage() {
   return messageDiv;
 }
 
-// Send message to Claude
+// Send message to AI provider
 async function sendMessage() {
   const message = userInput.value.trim();
   if (!message) return;
 
   if (!agent) {
-    addSystemMessage('Please set your Anthropic API key in settings');
+    const providerName = PROVIDER_NAMES[aiProvider];
+    const message = aiProvider === 'local'
+      ? 'Local AI not available. Please check Chrome flags.'
+      : `Please set your ${providerName} API key in settings`;
+    addSystemMessage(message);
     settingsPanel.classList.remove('hidden');
     return;
   }
@@ -416,7 +423,7 @@ async function sendMessage() {
   });
 
   try {
-    // Call Claude API
+    // Call AI provider API
     const response = await agent.sendMessage(systemPrompt, conversationHistory);
 
     // Remove thinking indicator
@@ -451,7 +458,7 @@ async function sendMessage() {
     // Remove thinking indicator on error
     thinkingMessage.remove();
     addSystemMessage('Error: ' + error.message);
-    console.error('Error calling Claude API:', error);
+    console.error('Error calling AI provider:', error);
   } finally {
     sendBtn.disabled = false;
   }

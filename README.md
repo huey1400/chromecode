@@ -14,10 +14,11 @@ AI coding assistant for CodePen, integrated into Chrome DevTools.
 
 1. Open a CodePen page
 2. Open DevTools (F12) → "Chrome Code" tab
-3. Select AI provider (Claude or Gemini)
-4. Click ⚙️ and enter your API key:
+3. Select AI provider (Claude, Gemini, or Local)
+4. Click ⚙️ and enter your API key (if using Claude or Gemini):
    - [Claude](https://console.anthropic.com/)
    - [Gemini](https://aistudio.google.com/apikey)
+   - Local: Uses Chrome's built-in AI (requires Chrome flags)
 
 ## Usage
 
